@@ -1,18 +1,12 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'package:project_front_end/SocketMethods.dart';
-import 'package:project_front_end/classes/models.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'HomePage.dart';
 
 class NewsPage extends StatefulWidget {
   @override
   State<NewsPage> createState() => _NewsPageState();
 }
-
 class _NewsPageState extends State<NewsPage> {
   List<NewsItem>? newsList = [
     NewsItem(imageUrl: 'https://quera.org/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fhero_image.46c9923a.png&w=1920&q=75',
@@ -29,10 +23,7 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   Widget build(BuildContext context) {
-    const darkBlue = Color.fromARGB(255, 78, 128, 152);
-    const lightBlueBackground = Color.fromARGB(255, 206, 211, 220);
-    const anotherBlue = Color.fromARGB(255, 34, 86, 111);
-    const orangeBack = Color.fromARGB(255, 195, 144, 108);
+    const blue = Color.fromARGB(255, 34, 86, 111);
 
     double widthOfScreen = MediaQuery.of(context).size.width;
     double heightOfScreen = MediaQuery.of(context).size.height;
@@ -66,10 +57,10 @@ class _NewsPageState extends State<NewsPage> {
                       fontFamily: 'iransans',
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: anotherBlue
+                      color: blue
                   )
               ),
-            ),
+            ),//above text
             Positioned(
               top: 0.13 * heightOfScreen,
               child: SizedBox(
@@ -86,7 +77,7 @@ class _NewsPageState extends State<NewsPage> {
                   },
                 ),
               ),
-            )
+            )//news list
 
           ],
         ),
@@ -103,24 +94,20 @@ class NewsItem {
   NewsItem({required this.imageUrl, required this.title, required this.link});
 }
 
-
 class NewsCard extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String link;
 
 
-  NewsCard({super.key, required this.imageUrl, required this.title, required this.link});
+  const NewsCard({super.key, required this.imageUrl, required this.title, required this.link});
 
   @override
   Widget build(BuildContext context) {
 
-  double widthOfScreen = MediaQuery.of(context).size.width;
-  double heightOfScreen = MediaQuery.of(context).size.height;
-
     return Card(
       color : Colors.blueGrey.shade300,
-      margin: EdgeInsets.all(8),
+      margin: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -130,6 +117,7 @@ class NewsCard extends StatelessWidget {
             title,
             style: const TextStyle(
                 fontSize: 18,
+
                 fontFamily: 'iransans',
                 fontWeight: FontWeight.bold
             ),
@@ -143,7 +131,6 @@ class NewsCard extends StatelessWidget {
                   color: Color.fromARGB(255, 34, 86, 111),
             ),),
             onPressed: () {
-              // Use url_launcher package to open the link
               launchUrl(Uri.parse(link));
             },
           ),
@@ -153,159 +140,4 @@ class NewsCard extends StatelessWidget {
   }
 }
 
-/*class CourseCards extends StatelessWidget {
-  String? courseName;
-  String? courseId;
-  String? courseUnit;
-  Teacher? courseTeacher;
-
-  CourseCards(this.courseName, this.courseId, this.courseUnit, this.courseTeacher, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    double widthOfScreen = MediaQuery.of(context).size.width;
-    double heightOfScreen = MediaQuery.of(context).size.height;
-    bool s = false;
-
-    return Container(
-      width: widthOfScreen,
-      height: 0.2 * heightOfScreen,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(15)),
-        color: Color.fromARGB(102, 82, 131, 170),
-      ),
-      child: Row(
-        textDirection: TextDirection.rtl,
-        // mainAxisSize: MainAxisSize.min,
-        // mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Flexible(
-            child: Container(
-              width: 0.5 * widthOfScreen,
-              height: 0.2 * heightOfScreen,
-              // decoration: BoxDecoration(color: Colors.lightBlue.shade100),
-              child: Column(
-                textDirection: TextDirection.rtl,
-                children: [
-                  Flexible(
-                      flex: 2,
-                      child: Container(
-                        margin: EdgeInsets.only(top: 5, bottom: 2, right: 8),
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          style: const TextStyle(
-                            fontFamily: 'iransans',
-                            fontSize: 24,
-                            color: Color.fromARGB(255, 27, 68, 88),
-                            fontWeight: FontWeight.w700,
-                          ),
-                          textDirection: TextDirection.rtl,
-                          courseName!,
-                        ),
-                      )),
-                  Flexible(
-                      flex: 1,
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 2, bottom: 2, right: 8),
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          style: const TextStyle(
-                            fontFamily: 'iransans',
-                            fontSize: 20,
-                            color: Color.fromARGB(255, 27, 68, 88),
-                            fontWeight: FontWeight.w200,
-                          ),
-                          textDirection: TextDirection.ltr,
-                          courseId!,
-                        ),
-                      )),
-                  Flexible(flex: 1,
-                      child: Container(
-                        margin: EdgeInsets.only(top: 2, bottom: 2, right: 8),
-                        alignment: Alignment.topRight,
-                        child: Text(
-                          style: const TextStyle(
-                            fontFamily: 'iransans',
-                            fontSize:  18,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w300,
-                          ),
-                          textDirection: TextDirection.rtl,
-                          '${courseUnit!} واحد',
-                        ),
-                      )
-                  ),
-                  Flexible(flex: 1, child: Container(
-                    margin: const EdgeInsets.only(top: 2, right: 8, bottom: 5),
-                    alignment: Alignment.topRight,
-                    child: const Text(
-                      style: TextStyle(
-                        fontFamily: 'iransans',
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w300,
-                      ),
-                      textDirection: TextDirection.rtl,
-                      'امتحان: شنبه ۹ تیر',
-                    ),
-                  )),
-                ],
-              ),
-            ),
-          ),
-          Flexible(
-            child: Container(
-              width: 0.5 * widthOfScreen,
-              height: 0.2 * heightOfScreen,
-              // decoration: BoxDecoration(color: Colors.lightBlue.shade100),
-              child: Column(
-                textDirection: TextDirection.rtl,
-                children: [
-                  Flexible(
-                      flex: 3,
-                      child: Container(
-                        margin: EdgeInsets.only(top: 5, bottom: 2, right: 15),
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          style: const TextStyle(
-                            fontFamily: 'iransans',
-                            fontSize: 22,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          textDirection: TextDirection.ltr,
-                          courseTeacher!.name,
-                        ),
-                      )),
-                  Flexible(
-                      flex: 7,
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 2, bottom: 2, right: 15),
-                        alignment: Alignment.centerRight,
-                        child: const Text(
-                          style: TextStyle(
-                            fontFamily: 'iransans',
-                            fontSize: 18,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w200,
-                          ),
-                          textDirection: TextDirection.rtl,
-                          'ساعت کلاس:\n'
-                              'شنبه ۱:۳۰ تا ۳:۰۰\n'
-                              'دوشنبه ۱:۳۰ تا ۳:۰۰',
-                        ),
-                      )),
-                ],
-              ),
-            ),
-          ),
-          *//* Text(
-              todoStatement,
-              style: const TextStyle(fontFamily: 'iransans')
-          )*//*
-        ],
-      ),
-    );
-  }
-}*/
 

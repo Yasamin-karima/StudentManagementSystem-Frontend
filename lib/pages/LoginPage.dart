@@ -1,9 +1,9 @@
+
 import 'package:flutter/material.dart';
 import 'package:project_front_end/NavigationBar.dart';
 import 'package:project_front_end/buttons.dart';
-import 'package:project_front_end/layers.dart';
 
-import '../Form.dart';
+import '../Forms.dart';
 import '../SocketMethods.dart';
 
 class LoginPage extends StatelessWidget{
@@ -59,7 +59,14 @@ class LoginPage extends StatelessWidget{
             Positioned(
                 left: 0.025 * widthOfScreen,
                 top: 0.33 * heightOfScreen,
-                child: const LoginSecondLayer()
+                child: Container(
+                  width: widthOfScreen - widthOfScreen * 0.05,
+                  height: 0.5 * heightOfScreen,
+                  decoration: const BoxDecoration(
+                      color: Color.fromARGB(90, 78, 128, 152),
+                      borderRadius: BorderRadius.all(Radius.circular(15))
+                  ),
+                )
             ),//blue background
             Positioned(
               left: 0.25 * widthOfScreen,

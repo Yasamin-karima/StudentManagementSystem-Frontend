@@ -2,26 +2,17 @@
 import 'package:flutter/material.dart';
 import 'package:project_front_end/NavigationBar.dart';
 import 'package:project_front_end/buttons.dart';
-import 'package:project_front_end/layers.dart';
-import 'package:project_front_end/pages/HomePage.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import '../Form.dart';
+import '../Forms.dart';
 import '../SocketMethods.dart';
-import 'ProfilePage.dart';
 
 class SignUpPage extends StatelessWidget{
-
-
   static bool _checkExists = false;
 
-  SignUpPage({super.key});
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    const Color darkBlue = Color.fromARGB(255, 78, 128, 152);
-    const lightBlueBackground = Color.fromARGB(255, 206, 211, 220);
 
     double widthOfScreen = MediaQuery.of(context).size.width;
     double heightOfScreen = MediaQuery.of(context).size.height;
@@ -41,7 +32,6 @@ class SignUpPage extends StatelessWidget{
               stops: const [0.27, 0.5, 0.75, 0.97]
 
           ),
-          // color: lightBlueBackground,
         ),
         child: Stack(
           children: [
@@ -66,7 +56,14 @@ class SignUpPage extends StatelessWidget{
             Positioned(
                 left: 0.025 * widthOfScreen,
                 top: 0.33 * heightOfScreen,
-                child: const LoginSecondLayer()
+                child: Container(
+                  width: widthOfScreen - widthOfScreen * 0.05,
+                  height: 0.5 * heightOfScreen,
+                  decoration: const BoxDecoration(
+                      color: Color.fromARGB(90, 78, 128, 152),
+                      borderRadius: BorderRadius.all(Radius.circular(15))
+                  ),
+                )
             ),//blue background
             Positioned(
               left: (widthOfScreen-170) / 2,
@@ -167,7 +164,6 @@ class SignUpButton extends StatelessWidget {
             color: darkBlue
         ),
         child: TextButton(
-          // onPressed: null,
           onPressed: () async {
             String res = await SocketMethods.studentSignUp();
             print(res);

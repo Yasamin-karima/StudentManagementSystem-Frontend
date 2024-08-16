@@ -1,19 +1,18 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:project_front_end/NavigationBar.dart';
 import 'package:project_front_end/SocketMethods.dart';
 import 'package:project_front_end/classes/models.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import 'HomePage.dart';
 
 class TodoPage extends StatefulWidget {
+  const TodoPage({super.key});
+
   @override
   State<TodoPage> createState() => _TodoPageState();
 }
 
-class _TodoPageState extends State<TodoPage> {
+class _TodoPageState extends State<TodoPage>    {
   List<Todo>? _todosList;
   List<Todo>? doneData = [];
   List<Todo>? undoneData = [];
@@ -44,10 +43,7 @@ class _TodoPageState extends State<TodoPage> {
 
   @override
   Widget build(BuildContext context) {
-    const darkBlue = Color.fromARGB(255, 78, 128, 152);
-    const lightBlueBackground = Color.fromARGB(255, 206, 211, 220);
-    const anotherBlue = Color.fromARGB(255, 34, 86, 111);
-    const orangeBack = Color.fromARGB(255, 195, 144, 108);
+    const blue = Color.fromARGB(255, 34, 86, 111);
 
     double widthOfScreen = MediaQuery.of(context).size.width;
     double heightOfScreen = MediaQuery.of(context).size.height;
@@ -80,10 +76,10 @@ class _TodoPageState extends State<TodoPage> {
                       fontFamily: 'iransans',
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: anotherBlue
+                      color: blue
                   )
               ),
-            ),
+            ),//above text
             Positioned(
               top: 0.13 * heightOfScreen,
               bottom: 80,
@@ -104,7 +100,7 @@ class _TodoPageState extends State<TodoPage> {
                       },
                 ),
               ),
-            ),
+            ),//undone todos
             Positioned(
               top: 0.56 * heightOfScreen,
               child: SizedBox(
@@ -123,11 +119,11 @@ class _TodoPageState extends State<TodoPage> {
                       },
                 ),
               ),
-            ),
+            ),//done todos
             Positioned(
               bottom: 50,right: 50,
               child: TodoAdder(),
-            )
+            )//adder
           ],
         ),
       ),
@@ -152,26 +148,22 @@ class _TodoPartsState extends State<TodoParts> {
   Widget build(BuildContext context) {
 
     _value = widget.checked;
-    double widthOfScreen = MediaQuery.of(context).size.width;
-    double heightOfScreen = MediaQuery.of(context).size.height;
-
-
 
     return Container(
 
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Color.fromARGB(102, 82, 131, 170),
         borderRadius: BorderRadius.all(Radius.circular(22))
 
       ),
-      margin: EdgeInsets.all(4),
+      margin: const EdgeInsets.all(4),
       child: CheckboxListTile(
         title: Text(
             widget.title,
           textAlign: TextAlign.right,
         ),
         secondary: InkWell(
-            child: Icon(Icons.delete_outline_outlined),
+            child: const Icon(Icons.delete_outline_outlined),
                 onDoubleTap: () {
                   SocketMethods.removeTodo(widget.title);
                 },
@@ -187,35 +179,13 @@ class _TodoPartsState extends State<TodoParts> {
         },
       ),
     );
-
-    /*return Container(
-      height: 0.065 * heightOfScreen,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(15)),
-        color: Color.fromARGB(102, 82, 131, 170),
-      ),
-      child: Row(
-        textDirection: TextDirection.rtl,
-        children: [
-          SizedBox(width: 0.015 * widthOfScreen),
-          Checkbox(
-            value: s,
-            onChanged: (value) {
-              // SocketMethods.
-            },
-          ),
-          Text(
-              todoStatement!,
-              style: const TextStyle(fontFamily: 'iransans')
-          )
-        ],
-      ),
-    );*/
   }
 }
 
 
 class TodoAdder extends StatefulWidget {
+  const TodoAdder({super.key});
+
   @override
   _TodoAdderState createState() => _TodoAdderState();
 }
@@ -228,35 +198,29 @@ class _TodoAdderState extends State<TodoAdder> {
   @override
   Widget build(BuildContext context) {
 
-    double widthOfScreen = MediaQuery.of(context).size.width;
-    double heightOfScreen = MediaQuery.of(context).size.height;
-    const lightBlueBackground = Color.fromARGB(255, 206, 211, 220);
-
-    return Container(
+    return SizedBox(
       width: 60, height: 120,
-      decoration: BoxDecoration(
-      ),
       child: SpeedDial(
         icon: Icons.add,
         renderOverlay: false,
-        backgroundColor: Color.fromARGB(150, 34, 86, 111),
+        backgroundColor: const Color.fromARGB(150, 34, 86, 111),
         // isOpen: _isOpen,
         onOpen: () => setState(() => _isOpen = true),
         onClose: () => setState(() => _isOpen = false),
         children: [
           SpeedDialChild(
-            child: Icon(Icons.edit),
+            child: const Icon(Icons.edit),
             label: 'Add Todo',
             onTap: () {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text('Add Todo'),
+                  title: const Text('Add Todo'),
                   content: Form(
                     key: _formKey,
                     child: TextFormField(
                       controller: _titleController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Todo title',
                         border: OutlineInputBorder(),
                       ),
@@ -270,14 +234,12 @@ class _TodoAdderState extends State<TodoAdder> {
                   ),
                   actions: [
                     TextButton(
-                      child: Text('OK'),
+                      child: const Text('OK'),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           SocketMethods.addTodo(_titleController.text);
                           _titleController.clear();
-                          // Update the UI
                           setState(() {});
-                          // Close the dialog
                           Navigator.of(context).pop();
                         }
                       },

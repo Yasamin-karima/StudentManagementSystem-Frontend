@@ -1,10 +1,5 @@
 
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:project_front_end/NavigationBar.dart';
-import 'package:project_front_end/classes/models.dart';
 
 class HomePage extends StatefulWidget{
   // Student student;
@@ -18,9 +13,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
-    const darkBlue = Color.fromARGB(255, 78, 128, 152);
-    const lightBlueBackground = Color.fromARGB(255, 206, 211, 220);
-    const anotherBlue = Color.fromARGB(170, 78, 128, 152);
     const orangeBack = Color.fromARGB(255, 195, 144, 108);
 
     double widthOfScreen = MediaQuery.of(context).size.width;
@@ -53,7 +45,6 @@ class _HomePageState extends State<HomePage> {
               stops: const [0.27, 0.5, 0.75, 0.97]
 
           ),
-          // color: lightBlueBackground,
         ),
         child: Stack(
           children: [

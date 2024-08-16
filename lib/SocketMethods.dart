@@ -6,7 +6,7 @@ import 'dart:io';
 
 class SocketMethods {
 
-  static String response = 'lll';
+  static String response = '';
   static String userId = '' , _password = '', _name = '';
   static Socket? socket;
   static final SocketMethods _socketMethods = SocketMethods.internal();
@@ -74,7 +74,7 @@ class SocketMethods {
   }
   static List<Course> _createTheCourseList(List<dynamic> list){
     List<Course> result = [];
-    print(list);
+    // print(list);
     for (dynamic d in list){
       result.add(Course.fromJsonMap(d));
     }
@@ -91,8 +91,6 @@ class SocketMethods {
 
 
   static Future<List<Todo>> getTodo() async{
-    // print(userId);
-    // String command = 'getTodo*402243004*';
     String command = 'getTodo*$userId*';
     String resp = await initSocket(command);
     print('RESPONSE IN STUDENT_GET_TODO METHOD');
@@ -104,11 +102,11 @@ class SocketMethods {
   }
   static List<Todo> _createTodoList(List<dynamic> list){
     List<Todo> result = [];
-    print(list);
+    // print(list);
     for (dynamic d in list){
       result.add(Todo.fromJsonMap(d));
     }
-    print(result);
+    // print(result);
     return result;
   }
   static Future<void> setTodoState(String title, bool newValue) async {
@@ -138,7 +136,6 @@ class SocketMethods {
 
 
   static Future<List<Assignment>> getDoneAssigns(String sortFormat) async{
-    // String command = 'getDoneAssigns*402243004*';
     String command = 'getDoneAssigns*$userId*$sortFormat';
     String resp = await initSocket(command);
     print('RESPONSE IN STUDENT_GET_DONE_ASS METHOD');
@@ -149,7 +146,6 @@ class SocketMethods {
     return _createAssignList(jsonDecode(resp));
   }
   static Future<List<Assignment>> getUndoneAssigns(String sortFormat) async{
-    // String command = 'getUndoneAssigns*402243004*';
     String command = 'getUndoneAssigns*$userId*$sortFormat';
     String resp = await initSocket(command);
     print('RESPONSE IN STUDENT_GET_DONE_ASS METHOD');
@@ -166,11 +162,7 @@ class SocketMethods {
       result.add(Assignment.fromJsonMap(d));
     }
     return result;
-  }/*
-  static List<Assignment>? sortSJF(List<Assignment> a){
-    var x =  a.sort((e, f) => DateTime.parse(e.deadline).compareTo(DateTime.parse(f.deadline)));
-    return null;
-   }*/
+  }
 
   static Future<void> changePassword (String newPass) async {
     print("&&&&&&&PASS&&&&&&&&&");
@@ -202,20 +194,4 @@ class SocketMethods {
 
 
 }
-
-
-/*
-Future<void> main() async {
-  print('in main');
-
-  Student s = await SocketMethods.getStudent();
-  print("%%%%%%%%%%");
-  print(s);
-  print(s.name);
-  print(s.id);
-  print(s.averageScore.toString());
-  print(s.dateOfBirth);
-}*/
-
-
 

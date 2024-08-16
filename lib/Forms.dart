@@ -1,15 +1,6 @@
 
-
-
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_front_end/SocketMethods.dart';
-
-import 'pages/ProfilePage.dart';
-import 'buttons.dart';
-import 'layers.dart';
 
 
 class IdForm extends StatelessWidget{

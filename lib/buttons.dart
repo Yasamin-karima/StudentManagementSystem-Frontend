@@ -1,49 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:project_front_end/pages/LoginPage.dart';
-import 'package:project_front_end/pages/ProfilePage.dart';
 import 'package:project_front_end/SocketMethods.dart';
 import 'package:project_front_end/pages/SignUpPage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/*class LoginButton extends StatelessWidget {
-  const LoginButton({super.key});
 
-  static const Color darkBlue = Color.fromARGB(255, 78, 128, 152);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        width: 130,
-        height: 50,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(13),
-            color: darkBlue
-        ),
-        child: TextButton(
-          onPressed: () async {
-            String res = await SocketMethods.studentLogin();
-            switch(res){
-              case '200': LoginPage.setCheckIdPass(true, true); break;
-              case '401': LoginPage.setCheckIdPass(true, false); break;
-              case '404': LoginPage.setCheckIdPass(false, false); break;
-            }
-            // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ProfilePage()));
-          },
-          child: const Text(
-            "ورود",
-            style: TextStyle(
-              color: Colors.black,
-                fontSize: 17,
-              fontFamily: 'iransans'
-            ),
-          ),
-        )
-    );
-  }
-}*/
 class LoginPageNavigateButton extends StatelessWidget {
   static const Color darkBlue = Color.fromARGB(255, 78, 128, 152);
-
   const LoginPageNavigateButton({super.key});
 
   @override
@@ -103,7 +67,6 @@ class sbuWebsiteViewButton extends StatefulWidget {
   @override
   State<sbuWebsiteViewButton> createState() => _sbuWebsiteViewButtonState();
 }
-
 class _sbuWebsiteViewButtonState extends State<sbuWebsiteViewButton> {
   @override
   Widget build(BuildContext context) {
@@ -139,7 +102,6 @@ class ChangePasswordButton extends StatefulWidget {
   @override
   State<ChangePasswordButton> createState() => _ChangePasswordButtonState();
 }
-
 class _ChangePasswordButtonState extends State<ChangePasswordButton> {
   @override
   Widget build(BuildContext context) {
@@ -160,7 +122,7 @@ class _ChangePasswordButtonState extends State<ChangePasswordButton> {
             showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                      title: Text('تغییر رمز عبور'),
+                      title: const Text('تغییر رمز عبور'),
                       content: Form(
                         key: _formKey,
                         child: TextFormField(
@@ -179,14 +141,12 @@ class _ChangePasswordButtonState extends State<ChangePasswordButton> {
                       ),
                       actions: [
                         TextButton(
-                          child: Text('تایید'),
+                          child: const Text('تایید'),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               SocketMethods.changePassword(_passController.text);
                               _passController.clear();
-                              // Update the UI
                               setState(() {});
-                              // Close the dialog
                               Navigator.of(context).pop();
                             }
                           },
@@ -231,20 +191,20 @@ class DeleteAccountButton extends StatelessWidget {
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: Text('آیا از حذف کامل حساب خود مطمئن هستید؟', textAlign: TextAlign.right,),
+                title: const Text('آیا از حذف کامل حساب خود مطمئن هستید؟', textAlign: TextAlign.right,),
                 actions: [
                   TextButton(
                       onPressed: () {
                         SocketMethods.deleteAccount();
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage(),));
                       }, 
-                      child: Text('بله،‌ مطمئنم')
+                      child: const Text('بله،‌ مطمئنم')
                   ),
                   TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text('نه، حذف نمیکنم')
+                      child: const Text('نه، حذف نمیکنم')
                   )
                 ],
               ),
@@ -316,7 +276,6 @@ class DeleteAccountButton extends StatelessWidget {
         });
   }
 }
-
 
 class LogoutButton extends StatelessWidget {
   const LogoutButton({super.key});
@@ -393,8 +352,7 @@ class LogoutButton extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: () {
-                      print('kkkkkkk');
-                      Navigator.of(context).pop();
+                      SocketMethods.deleteAccount();
                     },
                     child: const Text(
                       'بله، حذف میکنیم',
@@ -404,7 +362,6 @@ class LogoutButton extends StatelessWidget {
                   ),
                   TextButton(
                       onPressed: () {
-                        print('kkkkkkk');
                         Navigator.of(context).pop();
                       },
                       child: const Text(

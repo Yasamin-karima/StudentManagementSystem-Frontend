@@ -1,13 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:project_front_end/NavigationBar.dart';
 import 'package:project_front_end/SocketMethods.dart';
 import 'package:project_front_end/classes/models.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
-import 'HomePage.dart';
 
 class Courses extends StatefulWidget {
   const Courses({super.key});
@@ -15,7 +11,6 @@ class Courses extends StatefulWidget {
   @override
   State<Courses> createState() => _CoursesState();
 }
-
 class _CoursesState extends State<Courses> {
   List<Course> _coursesList = [];
 
@@ -38,10 +33,7 @@ class _CoursesState extends State<Courses> {
 
   @override
   Widget build(BuildContext context) {
-    const darkBlue = Color.fromARGB(255, 78, 128, 152);
-    const lightBlueBackground = Color.fromARGB(255, 206, 211, 220);
-    const anotherBlue = Color.fromARGB(255, 34, 86, 111);
-    const orangeBack = Color.fromARGB(255, 195, 144, 108);
+    const blue = Color.fromARGB(255, 34, 86, 111);
 
     double widthOfScreen = MediaQuery.of(context).size.width;
     double heightOfScreen = MediaQuery.of(context).size.height;
@@ -74,7 +66,7 @@ class _CoursesState extends State<Courses> {
                     fontFamily: 'iransans',
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: anotherBlue
+                    color: blue
                 )
               ),
             ),
@@ -93,7 +85,7 @@ class _CoursesState extends State<Courses> {
                 ),
               ),
             ),
-            Positioned(
+            const Positioned(
               bottom: 50,
                 right: 50,
                 child: CourseAdder()
@@ -114,7 +106,6 @@ class CourseCards extends StatelessWidget {
   Widget build(BuildContext context) {
     double widthOfScreen = MediaQuery.of(context).size.width;
     double heightOfScreen = MediaQuery.of(context).size.height;
-    bool s = false;
 
     return Container(
       width: widthOfScreen,
@@ -125,21 +116,18 @@ class CourseCards extends StatelessWidget {
       ),
       child: Row(
         textDirection: TextDirection.rtl,
-        // mainAxisSize: MainAxisSize.min,
-        // mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Flexible(
-            child: Container(
+            child: SizedBox(
               width: 0.5 * widthOfScreen,
               height: 0.2 * heightOfScreen,
-              // decoration: BoxDecoration(color: Colors.lightBlue.shade100),
               child: Column(
                 textDirection: TextDirection.rtl,
                 children: [
                   Flexible(
                       flex: 2,
                       child: Container(
-                        margin: EdgeInsets.only(top: 5, bottom: 2, right: 8),
+                        margin: const EdgeInsets.only(top: 5, bottom: 2, right: 8),
                         alignment: Alignment.centerRight,
                         child: Text(
                           style: const TextStyle(
@@ -170,7 +158,7 @@ class CourseCards extends StatelessWidget {
                       )),
                   Flexible(flex: 1,
                       child: Container(
-                        margin: EdgeInsets.only(top: 2, bottom: 2, right: 8),
+                        margin: const EdgeInsets.only(top: 2, bottom: 2, right: 8),
                         alignment: Alignment.topRight,
                         child: Text(
                           style: const TextStyle(
@@ -203,10 +191,9 @@ class CourseCards extends StatelessWidget {
             ),
           ),
           Flexible(
-            child: Container(
+            child: SizedBox(
               width: 0.5 * widthOfScreen,
               height: 0.2 * heightOfScreen,
-              // decoration: BoxDecoration(color: Colors.lightBlue.shade100),
               child: Flex(
                 direction: Axis.vertical,
                 textDirection: TextDirection.rtl,
@@ -214,7 +201,7 @@ class CourseCards extends StatelessWidget {
                   Flexible(
                       flex: 5,
                       child: Container(
-                        margin: EdgeInsets.all(3),
+                        margin: const EdgeInsets.all(3),
                         alignment: Alignment.topCenter,
                         child: Text(
                           style: const TextStyle(
@@ -257,10 +244,6 @@ class CourseCards extends StatelessWidget {
               ),
             ),
           ),
-          /* Text(
-              todoStatement,
-              style: const TextStyle(fontFamily: 'iransans')
-          )*/
         ],
       ),
     );
@@ -322,9 +305,7 @@ class _CourseAdderState extends State<CourseAdder> {
                         if (_formKey.currentState!.validate()) {
                           SocketMethods.addCourse(_titleController.text);
                           _titleController.clear();
-                          // Update the UI
                           setState(() {});
-                          // Close the dialog
                           Navigator.of(context).pop();
                         }
                       },

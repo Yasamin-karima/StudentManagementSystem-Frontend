@@ -1,18 +1,15 @@
 
-
 import 'package:flutter/material.dart';
 import 'package:profile_photo/profile_photo.dart';
 import 'package:project_front_end/buttons.dart';
 import 'package:project_front_end/classes/models.dart';
 
-import '../NavigationBar.dart';
 import '../SocketMethods.dart';
 
 class ProfilePage extends StatefulWidget{
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
-
 class _ProfilePageState extends State<ProfilePage> {
   Student? _student;
 
@@ -33,12 +30,9 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
 
-    const darkBlue = Color.fromARGB(255, 78, 128, 152);
     const lightBlueBackground = Color.fromARGB(255, 206, 211, 220);
     const anotherBlue = Color.fromARGB(90, 78, 128, 152);
     const orangeBack = Color.fromARGB(255, 195, 144, 108);
@@ -60,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   height: heightOfScreen * 0.42,
                 )
-            ),
+            ),//blue layer
             Positioned(
               top: heightOfScreen * 0.085,
                 left: (widthOfScreen - 140) / 2,
@@ -93,7 +87,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ],
                 )
-            ),
+            ),//photo and name
             Positioned(
               top: 0.37 * heightOfScreen,
                 left: widthOfScreen * 0.1,
@@ -118,7 +112,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                 )
-            ),
+            ),// info columns
             Positioned(
                 top: 0.72 * heightOfScreen,
                 left: widthOfScreen * 0.1,
@@ -138,16 +132,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                 )
-            ),
+            ),//two buttons
             Positioned(
                 top: 0.82 * heightOfScreen,
                 left: widthOfScreen * 0.35,
                 child: const LogoutButton()
-            ),
+            ),//logout button
           ],
         ),
       ),
-      // bottomNavigationBar: const BottomBar(),
     );
   }
 }
@@ -196,8 +189,7 @@ class ShowingDataBoxes extends StatelessWidget{
 
 }
 
-class BirthDateWidget extends StatefulWidget {
-
+class BirthDateWidget extends StatefulWidget  {
   DateTime? _birthDate;
   BirthDateWidget(this._birthDate, {super.key});
 
@@ -214,7 +206,7 @@ class _BirthDateWidgetState extends State<BirthDateWidget> {
     const darkBlue = Color.fromARGB(255, 78, 128, 152);
 
     return Container(
-      padding: EdgeInsets.only(left: 10, right: 20),
+      padding: const EdgeInsets.only(left: 10, right: 20),
         height: heightOfScreen * 0.3 / 6,
         width: widthOfScreen * 0.62,
         decoration: BoxDecoration(
@@ -226,9 +218,9 @@ class _BirthDateWidgetState extends State<BirthDateWidget> {
           textDirection: TextDirection.rtl,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Flexible(
-                child: Text(': تاریخ تولد', style: const TextStyle(fontFamily: 'iransans', fontSize: 13)),
-              flex: 1,
+            const Flexible(
+                flex: 1,
+                child: Text(': تاریخ تولد', style: TextStyle(fontFamily: 'iransans', fontSize: 13)),
             ),
             Flexible(
               flex: 1,
@@ -241,11 +233,11 @@ class _BirthDateWidgetState extends State<BirthDateWidget> {
             ),
             Flexible(
               flex: 1,
-              child: Container(
+              child: SizedBox(
                 width: 80,
                 height: 30,
                 child: ElevatedButton(
-                  child: Text('تغییر'),
+                  child: const Text('تغییر'),
                   onPressed: () async {
                     final DateTime? pickedDate = await _showDatePicker(context);
                     if (pickedDate!= null) {
