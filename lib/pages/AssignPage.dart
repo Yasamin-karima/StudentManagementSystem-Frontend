@@ -1,14 +1,9 @@
 
-
-import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
 import 'package:project_front_end/classes/models.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import '../SocketMethods.dart';
-import 'HomePage.dart';
 
 class AssignPage extends StatefulWidget{
   String sortFormat;
@@ -172,7 +167,7 @@ class _AssignPageState extends State<AssignPage> {
                             scrollDirection: Axis.horizontal,
                             itemCount: undoneAssigns.length,
                             reverse: true,
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                             itemBuilder: (context, index) {
                               return AssignCard(undoneAssigns[index]);
                             },
@@ -221,9 +216,9 @@ class _AssignPageState extends State<AssignPage> {
 
 
 class AssignCard extends StatefulWidget {
-  Assignment assignment;
+  final Assignment assignment;
   // final Function () onAssCardTap;
-  AssignCard(this.assignment, {super.key});
+  const AssignCard(this.assignment, {super.key});
 
   @override
   State<AssignCard> createState() => _AssignCardState();
@@ -237,7 +232,6 @@ class _AssignCardState extends State<AssignCard> {
 
     return InkWell(
       onTap: () {
-        print('%%%%%%%%TAPPED');
         _showModalBottomSheet(context, widget.assignment);
       },
       hoverColor: Colors.black,
@@ -309,173 +303,166 @@ void _showModalBottomSheet(BuildContext context, Assignment ass){
       useSafeArea: false,
       context: context,
       builder: (context) {
-        return Container(
-          height: 900,
-          child: Flex(
-            direction: Axis.vertical,
-            children: [
-              Flexible(
-                  flex: 6,
-                  child: Flex(
-                    direction: Axis.horizontal,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    textDirection: TextDirection.rtl,
-                    children: [
-                      Flexible(
-                          flex: 6,
-                          child: Flex(
-                            textDirection: TextDirection.rtl,
-                            direction: Axis.vertical,
-                            // crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Flexible(
-                                  flex: 2,
-                                  child: Text(
-                                    style: _textStyle(20, FontWeight.w700),
-                                    ass.title,
-                                  )
-                              ),
-                              Flexible(
-                                  flex: 5,
-                                  child: Column(
+        return Flex(
+          direction: Axis.vertical,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Flexible(
+                flex: 6,
+                child: Flex(
+                  direction: Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  textDirection: TextDirection.rtl,
+                  children: [
+                    Flexible(
+                        flex: 6,
+                        child: Flex(
+                          textDirection: TextDirection.rtl,
+                          direction: Axis.vertical,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Flexible(
+                                flex: 4,
+                                child: Text(
+                                  style: _textStyle(20, FontWeight.w700),
+                                  ass.title,
+                                )
+                            ),//ass_title
+                            Flexible(
+                                flex: 5,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'توضیحات استاد',
+                                      style: _textStyle(15, FontWeight.w400),
+                                      textAlign: TextAlign.right,
+                                    ),
+                                    Text(
+                                        ass.teacherDescription,
+                                      style: _textStyle(14, FontWeight.w200),
+                                      textDirection: TextDirection.rtl,
+                                    )
+                                  ],
+                                )
+                            ),//description
+                          ],
+                        ),
+                    ),//right part
+                    Flexible(
+                        flex: 5,
+                        child: Flex(
+                          // textDirection: TextDirection.ltr,
+                          direction: Axis.vertical,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Flexible(
+                                child: Container(
+                                  margin: const EdgeInsets.all(8),
+                                  width: 170,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 2, color: Colors.black),
+                                    borderRadius: BorderRadius.all(Radius.circular(14))
+                                  ),
+                                  child: Row(
+                                    textDirection: TextDirection.rtl,
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      Text(
-                                        'توضیحات استاد',
-                                        style: _textStyle(15, FontWeight.w400),
-                                        textAlign: TextAlign.right,
-                                      ),
-                                      Text(
-                                          ass.teacherDescription,
-                                        style: _textStyle(14, FontWeight.w200),
-                                        textDirection: TextDirection.rtl,
-                                      )
+                                      Text(':نمره', style: _textStyle(16, FontWeight.w500)),
+                                      Text(ass.score.toString(), style: _textStyle(18, FontWeight.w500))
                                     ],
-                                  )
-                              ),
-                            ],
-                          ),
-                      ),
-                      Flexible(
-                          flex: 5,
-                          child: Flex(
-                            // textDirection: TextDirection.ltr,
-                            direction: Axis.vertical,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Flexible(
-                                  child: Container(
-                                    width: 170,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(width: 2, color: Colors.black),
-                                      borderRadius: BorderRadius.all(Radius.circular(14))
-                                    ),
-                                    child: Row(
-                                      textDirection: TextDirection.rtl,
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(':نمره', style: _textStyle(16, FontWeight.w500)),
-                                        Text(ass.score.toString(), style: _textStyle(18, FontWeight.w500))
-                                      ],
-                                    ),
-                                  )
-                              ),
-                              Flexible(
-                                  child: Container(
-                                    width: 170,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(width: 0.5, color: Colors.black),
-                                        borderRadius: const BorderRadius.all(Radius.circular(14)),
+                                  ),
+                                )
+                            ),//score
+                            Flexible(
+                                child: Container(
+                                  margin: const EdgeInsets.all(8),
+                                  width: 170,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(width: 0.5, color: Colors.black),
+                                      borderRadius: const BorderRadius.all(Radius.circular(14)),
+                                    color: Colors.blueGrey.shade300
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Text(format1(ass.getJalaliDeadline()), style: _textStyle(16, FontWeight.w500)),
+                                      Text(int.parse(getDistanceBetween(ass)) > 0
+                                          ?'‏${getDistanceBetween(ass)} روز مانده'
+                                          :'‏${-int.parse(getDistanceBetween(ass))} روز گذشته',
+                                          style: _textStyle(16, FontWeight.w500)),
+                                    ],
+                                  ),
+                                )
+                            ),//deadline
+                            Flexible(
+                                child: Container(
+                                  margin: const EdgeInsets.all(8),
+                                  width: 170,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(width: 0.5, color: Colors.black),
+                                      borderRadius: const BorderRadius.all(Radius.circular(14)),
                                       color: Colors.blueGrey.shade300
+                                  ),
+                                  child: ElevatedButton(
+                                    style: ButtonStyle(
+                                      elevation: WidgetStateProperty.all(0),
+                                      backgroundColor: WidgetStateColor.transparent
                                     ),
-                                    child: Column(
-                                      children: [
-                                        Text(format1(ass.getJalaliDeadline()), style: _textStyle(16, FontWeight.w500)),
-                                        Text(int.parse(getDistanceBetween(ass)) > 0
-                                            ?'‏${getDistanceBetween(ass)} روز مانده'
-                                            :'‏${-int.parse(getDistanceBetween(ass))} روز گذشته',
-                                            style: _textStyle(16, FontWeight.w500)),
-                                      ],
-                                    ),
-                                  )
-                              ),
-                              Flexible(
-                                  child: Container(
-                                    width: 170,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(width: 0.5, color: Colors.black),
-                                        borderRadius: const BorderRadius.all(Radius.circular(14)),
-                                        color: Colors.blueGrey.shade300
-                                    ),
-                                    child: ElevatedButton(
-                                      style: ButtonStyle(
-                                        elevation: WidgetStateProperty.all(0),
-                                        backgroundColor: WidgetStateColor.transparent
-                                      ),
-                                      child: Text('ارسال فایل', style: _textStyle(16, FontWeight.w500), textAlign: TextAlign.center,),
-                                      onPressed: () async {
-                                        FilePickerResult? result = await FilePicker.platform.pickFiles();
-                                        if (result == null) return;
-                                        PlatformFile file = result.files.first;
-                                        openFile(file);
-                                      },
-                                    ),
-                                  )
-                              ),
-                            ],
-                          ),
-                      ),
-                    ],
-                  )
-              ),
-              Flexible(
-                    flex: 3,
-                      child: Container(
-                        width: 400,
-                        decoration: BoxDecoration(
-                          color: Colors.blueGrey.shade100,
-                          borderRadius: BorderRadius.all(Radius.circular(15))
+                                    child: Text('ارسال فایل', style: _textStyle(16, FontWeight.w500), textAlign: TextAlign.center,),
+                                    onPressed: () async {
+                                      FilePickerResult? result = await FilePicker.platform.pickFiles();
+                                      if (result == null) return;
+                                      PlatformFile file = result.files.first;
+                                      // openFile(file);
+                                      /*void openFile(PlatformFile file) {
+  OpenFile.open(file.path!);
+}*/
+                                    },
+                                  ),
+                                )
+                            ),//send button
+                          ],
                         ),
-                        // child: Field,
-                      )
-                  ),
-              Flexible(
-                    flex: 2,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          TextButton(
-                              onPressed: null,
-                              child: Text('تایید', style: _textStyle(16, FontWeight.w500))
-                          ),
-                          TextButton(
-                              onPressed: null,
-                              child: Text('تایید', style: _textStyle(16, FontWeight.w500))
-                          )
-                        ],
-                      )
-                  ),
-            ],
-          ),
+                    ),//left part
+                  ],
+                )
+            ),
+            Flexible(
+                  flex: 2,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      textDirection: TextDirection.rtl,
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('تایید', style: _textStyle(16, FontWeight.w500))
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('خروج', style: _textStyle(16, FontWeight.w500))
+                        )
+                      ],
+                    )
+                ),//buttons part
+          ],
         );
       }
   );
 }
 
-void openFile(PlatformFile file) {
-  OpenFile.open(file.path!);
-}
-
-
 String getDistanceBetween(Assignment ass) {
   return (ass.getJalaliDeadline() ^ Jalali.now()).toString();
 }
+
 TextStyle _textStyle(double size, FontWeight w){
   return TextStyle(
     fontFamily: 'iransans',
