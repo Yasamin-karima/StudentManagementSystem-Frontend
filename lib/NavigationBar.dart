@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:project_front_end/main.dart';
 import 'package:project_front_end/pages/AssignPage.dart';
 import 'package:project_front_end/pages/Courses.dart';
 import 'package:project_front_end/pages/HomePage.dart';
@@ -15,7 +13,6 @@ class MainPage extends StatefulWidget {
   @override
   _MainPageState createState() => _MainPageState();
 }
-
 class _MainPageState extends State<MainPage> {
   int currentIndex = 0;
 
@@ -24,7 +21,7 @@ class _MainPageState extends State<MainPage> {
     TodoPage(),
     HomePage(),
     AssignPage('SJF'),
-    Courses(),
+    const Courses(),
     ProfilePage(),
   ];
 
@@ -33,33 +30,34 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       body: _tabs[currentIndex],
 
-      bottomNavigationBar:NavigationBar(
+      bottomNavigationBar: NavigationBar(
         destinations: const [
           NavigationDestination(
             icon: Icon(IconData(0xf0541, fontFamily: 'MaterialIcons')),
-            label: 'news',
+            label: 'خبرا',
           ),
           NavigationDestination(
             icon: Icon(Icons.check_circle_outline),
-            label: 'todo',
+            label: 'کارا',
           ),
           NavigationDestination(
             icon: Icon(Icons.home_filled),
-            label: 'home',
+            label: 'سرا',
           ),
           NavigationDestination(
             icon: Icon(Icons.assignment_turned_in_outlined),
-            label: 'assignment',
+            label: 'تمرینا',
           ),
           NavigationDestination(
             icon: Icon(Icons.school_rounded),
-            label: 'course',
+            label: 'درسا',
           ),
           NavigationDestination(
             icon: Icon(Icons.account_circle_sharp),
-            label: 'profile',
+            label: 'پروفایل',
           ),
         ],
+
         selectedIndex: currentIndex,
         onDestinationSelected: (index) {
           setState(() {
@@ -68,43 +66,10 @@ class _MainPageState extends State<MainPage> {
         },
         backgroundColor: const Color.fromARGB(230, 195, 144, 108),
         animationDuration: const Duration(milliseconds: 800),
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         height: 75,
       )
     );
   }
 }
-/*
-class BottomAnimatedNavigationBar extends StatefulWidget {
-  @override
-  State<BottomAnimatedNavigationBar> createState() => _BottomAnimatedNavigationBarState();
-}
 
-class _BottomAnimatedNavigationBarState extends State<BottomAnimatedNavigationBar> {
-  late int currentPageIndex;
-  @override
-  Widget build(BuildContext context) {
-    return NavigationBar(
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_filled),
-            label: 'home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.school_rounded),
-            label: 'courses',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.account_circle_sharp),
-            label: 'profile',
-          ),
-        ],
-        selectedIndex: currentPageIndex,
-      onDestinationSelected: (index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-      },
-    );
-  }
-}*/
