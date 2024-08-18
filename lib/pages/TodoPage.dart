@@ -115,12 +115,13 @@ class _TodoPageState extends State<TodoPage>    {
                         undoneData?.add(Todo(doneData![index].title, doneData![index].isDone));
                         doneData!.remove(Todo(doneData![index].title, doneData![index].isDone));
                       });
-                      SocketMethods.setTodoState(doneData![index].title, newValue);});
-                      },
+                      SocketMethods.setTodoState(doneData![index].title, newValue);
+                    });
+                  },
                 ),
               ),
             ),//done todos
-            Positioned(
+            const Positioned(
               bottom: 50,right: 50,
               child: TodoAdder(),
             )//adder
@@ -143,11 +144,8 @@ class TodoParts extends StatefulWidget {
   State<TodoParts> createState() => _TodoPartsState();
 }
 class _TodoPartsState extends State<TodoParts> {
-  bool? _value;
   @override
   Widget build(BuildContext context) {
-
-    _value = widget.checked;
 
     return Container(
 
@@ -170,8 +168,7 @@ class _TodoPartsState extends State<TodoParts> {
         ),
         activeColor: const Color.fromARGB(255, 34, 86, 111),
         checkColor: Colors.white,
-        // selected: _value,
-        value: _value,
+        value: widget.checked,
         onChanged: (bool? value) {
           setState(() {
             widget.onChanged(value!);

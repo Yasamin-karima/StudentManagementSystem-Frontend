@@ -20,7 +20,7 @@ class _AssignPageState extends State<AssignPage> {
   @override
   void initState() {
     super.initState();
-    fetchData(); // Call your method here
+    fetchData();
   }
 
   Future<void> fetchData() async {
@@ -78,7 +78,6 @@ class _AssignPageState extends State<AssignPage> {
           ),
           child: Stack(
             children: [
-              // showAssignment(),
               Positioned(
                 top: heightOfScreen * 0.05,
                 right: (widthOfScreen - 300) / 2,

@@ -1,15 +1,76 @@
 
 import 'package:flutter/material.dart';
+import 'package:shamsi_date/shamsi_date.dart';
+
+import '../SocketMethods.dart';
+import '../classes/models.dart';
 
 class HomePage extends StatefulWidget{
-  // Student student;
+  Student? student;
   HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
+
 }
 
 class _HomePageState extends State<HomePage> {
+
+  List<Assignment> assignments = [];
+  List<Todo> todos = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    try {
+      List<Assignment> fetchedAssigns = [];
+      List<Todo> fetchedTodo = [];
+      fetchedAssigns = await SocketMethods.getUndoneAssigns('SJF');
+      fetchedTodo = await SocketMethods.getTodo();
+
+      setState(() {
+        List<Assignment> tempAssign = [];
+        List<Todo> tempTodo = [];
+        /**
+         * removing passed deadline assignments
+         * and getting the first 3
+         */
+        for (Assignment ass in fetchedAssigns) {
+          if (int.parse((ass.getJalaliDeadline() ^ Jalali.now()).toString()) >= 0){
+            tempAssign.add(ass);
+          }
+        }
+        if (tempAssign.length < 3) {
+          assignments.addAll(tempAssign);
+        } else {
+          assignments.addAll(tempAssign.getRange(0, 3));
+        }
+        /**
+         * removing done todos
+         * and getting the first 4
+         */
+        for (Todo t in fetchedTodo) {
+          if (!t.isDone){
+            tempTodo.add(t);
+          }
+        }
+        if (tempTodo.length < 4) {
+          todos.addAll(tempTodo);
+        } else {
+          todos.addAll(tempTodo.getRange(0, 4));
+        }
+      });
+    } catch (e) {
+      print('Error fetching assigns: $e');
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -69,7 +130,7 @@ class _HomePageState extends State<HomePage> {
             ),// text"other assigns"
             Positioned(
               top: 0.125 * heightOfScreen + 44,
-                left: 0.02 * widthOfScreen,
+              left: 0.02 * widthOfScreen,
                 child: Container(
                   width: 0.96 * widthOfScreen,
                   height: 0.21 * heightOfScreen,
@@ -77,13 +138,13 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(18),
                     color: orangeBack,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      AssignCard(),
-                      AssignCard(),
-                      AssignCard(),
-                    ],
+                  child: ListView.builder(
+                    reverse: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: assignments.length,
+                    itemBuilder: (context, index) {
+                      return AssignCard(assignments[index]);
+                    },
                   ),
                 )
             ),//assign cards
@@ -94,20 +155,20 @@ class _HomePageState extends State<HomePage> {
             ),//text"other TODOs"
             Positioned(
               top: heightOfScreen * 0.335 + 90,
-                left: 0,
+              left: 0,
                 child: SizedBox(
                   height: 0.23 * heightOfScreen,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TodoParts('انجام پروژه'),
-                      TodoParts('ورزش'),
-                      TodoParts('تمرین پایتون'),
-                      TodoParts('تمرین مدار'),
-                    ],
-                  ),
+                  width: 0.98 * widthOfScreen,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(0),
+                    scrollDirection: Axis.vertical,
+                    itemCount: todos.length,
+                    itemBuilder: (context, index) {
+                      return TodoParts(todos[index]);
+                    },
+                  )
                 )
-            ),
+            ),//todos
             Positioned(
                 top: heightOfScreen * 0.565 + 90,
                 left: 0,
@@ -133,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                           ScoreCard('برنامه نویسی پیشرفته', '۱۹.۷۵'),
                         ],
                       ),
-                      Container(
+                      SizedBox(
                         // width: 0.98 * widthOfScreen,
                         height: 0.12 * heightOfScreen,
                         child: ListView(
@@ -150,12 +211,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
             ),
-            /*const Positioned (
-              bottom: 0,
-                left: 0,
-                right: 0,
-                child: BottomBar()*/
-            // ),
           ],
         ),
       ),
@@ -164,7 +219,8 @@ class _HomePageState extends State<HomePage> {
 }
 
 class AssignCard extends StatelessWidget {
-  const AssignCard({super.key});
+  Assignment assignment;
+  AssignCard(this.assignment, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -172,69 +228,70 @@ class AssignCard extends StatelessWidget {
     double widthOfScreen = MediaQuery.of(context).size.width;
     double heightOfScreen = MediaQuery.of(context).size.height;
 
-    return InkWell(
-      // onTap: ,
-      child: Card(
-        child: Container(
-          width: 0.277 * widthOfScreen,
-          height: 0.195 * heightOfScreen,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(13)
-          ),
-          child: Card(
-            borderOnForeground: true,
-            margin: EdgeInsets.all(0),
-            color: const Color.fromARGB(200, 78, 128, 152),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Text(
-                  'تمرین مدار الکتریکی',
-                  textDirection: TextDirection.rtl,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontFamily: 'iransans',
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+    return Card(
+      child: Container(
+        width: 0.3 * widthOfScreen,
+        height: 0.195 * heightOfScreen,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(13)
+        ),
+        child: Card(
+          borderOnForeground: true,
+          margin: const EdgeInsets.all(0),
+          color: const Color.fromARGB(200, 78, 128, 152),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                assignment.title,
+                textDirection: TextDirection.rtl,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontFamily: 'iransans',
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Column(
+                children: [
+                  const Text(
+                    'مهلت:'
+                    ,textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontFamily: 'iransans',
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const Column(
-                  children: [
-                    Text(
-                      'مهلت:'
-                      ,textDirection: TextDirection.rtl,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontFamily: 'iransans',
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),),
-                    Text('شنبه'
-                      ,textDirection: TextDirection.rtl,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontFamily: 'iransans',
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),),
-                    Text('۲۳ خرداد',
-                      textDirection: TextDirection.rtl,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontFamily: 'iransans',
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),),
-                  ],
-                ),
-                Text('‏۴ روز مانده',
-                  textDirection: TextDirection.rtl,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontFamily: 'iransans',
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.deepOrange.shade900
-                  ),),
-              ],
-            ),
+                  Text(
+                    assignment.getJalaliDeadline().formatter.wN,
+                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontFamily: 'iransans',
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                  Text(
+                    '${assignment.getJalaliDeadline().formatter.d} ${assignment.getJalaliDeadline().formatter.mN}',
+                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontFamily: 'iransans',
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                ],
+              ),
+              Text (
+                '‏${(Jalali.now() ^ assignment.getJalaliDeadline()).abs()} روز مانده',
+                textDirection: TextDirection.rtl,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontFamily: 'iransans',
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepOrange.shade900
+                ),),
+            ],
           ),
         ),
       ),
@@ -251,7 +308,9 @@ class OtherButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () {null;  },
+      onPressed: () {
+        null;
+      },
       child: Row(
         children :[
           const Icon(Icons.chevron_left, size: 35, color: Colors.black,),
@@ -270,21 +329,26 @@ class OtherButtons extends StatelessWidget {
 
 }
 
-class TodoParts extends StatelessWidget {
-  String todoStatement;
+class TodoParts extends StatefulWidget {
+  Todo todo;
 
-  TodoParts(this.todoStatement, {super.key});
+  TodoParts(this.todo, {super.key});
 
+  @override
+  State<TodoParts> createState() => _TodoPartsState();
+}
+class _TodoPartsState extends State<TodoParts> {
   @override
   Widget build(BuildContext context) {
 
     double widthOfScreen = MediaQuery.of(context).size.width;
     double heightOfScreen = MediaQuery.of(context).size.height;
-    bool s =false;
+    bool s = false;
 
     return Container(
       width: 0.98 * widthOfScreen,
       height: 0.05 * heightOfScreen,
+      margin: const EdgeInsets.only(top: 3, bottom: 3),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(topRight: Radius.circular(15), bottomRight: Radius.circular(15)),
         color: Color.fromARGB(102, 82, 131, 170),
@@ -292,22 +356,25 @@ class TodoParts extends StatelessWidget {
       child: Row(
         textDirection: TextDirection.rtl,
         children: [
-          SizedBox(width: 0.015 * widthOfScreen),
           Checkbox(
-              value: s,
-              onChanged: (value) {
-                s = true;
-              },
+            activeColor: const Color.fromARGB(255, 34, 86, 111),
+            checkColor: Colors.white,
+            value: widget.todo.isDone,
+            onChanged: (bool? value) {
+              setState(() {
+                widget.todo.isDone = value!;
+                SocketMethods.setTodoState(widget.todo.title, value);
+              });
+            },
           ),
           Text(
-              todoStatement,
+              widget.todo.title,
             style: const TextStyle(fontFamily: 'iransans')
             )
         ],
       ),
     );
   }
-
 }
 
 class ExamCard extends StatelessWidget {
