@@ -12,10 +12,6 @@ class Course {
   List times;
 
   Course(this.name, this.id, this.unit, this.teacher, this.examDate, this.times); //3
-  // Date examDate;// use java class
-  // ArrayList<Assignment> assignments = new ArrayList<>();
-  // ArrayList<Student> students = new ArrayList<>();
-  // ArrayList<Term> terms = new ArrayList<>();
 
   factory Course.fromJsonMap(Map<String, dynamic> map){
     return Course(map['name'], map['id'], map['unit'],
@@ -27,33 +23,6 @@ class Course {
     DateTime d = DateTime(int.parse(split[0]), int.parse(split[1]), int.parse(split[2]));
     return Jalali.fromDateTime(d);
   }
-
-
-  // public String getId() {
-  //   return id;
-  // }
-
-  /*public Teacher getTeacher() {
-    return teacher;
-  }*/
-  //
-  // public String getName() {
-  //   return name;
-  // }
-  // public int getUnit() {
-  //   return unit;
-  // }
-  // public int getNoOfStudents() {
-  //   return students.size();
-  // }
-  // public int getNoOfAssignments() {
-  //   return assignments.size();
-  // }
-  // public String getExamDate() {
-  //   return examDate.toString();
-  // }
-
-
 }
 
 class Todo {
@@ -82,17 +51,15 @@ class Assignment{
   bool? isDone;
   String title;
   String teacherDescription;
-  late String studentDescription;
   String deadline;
-  DateTime? estimatedTime;
   double score;
 
   Assignment(this.title, this.course, this.teacherDescription, this.deadline, this.score, this.isDone);
 
   factory Assignment.fromJsonMap(Map<String, dynamic> map){
-    return Assignment(map['title'], Course.fromJsonMap(map['course']),
+    return Assignment(map['title'] ?? "null", Course.fromJsonMap(map['course']),
         map['description'], map['deadline'], map['score'],
-        (map['score'] == 0) ? false : true);
+        (map['score'] == 0.0) ? false : true);
   }
 
   Jalali getJalaliDeadline(){

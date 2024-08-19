@@ -8,17 +8,17 @@ import 'package:project_front_end/pages/TodoPage.dart';
 
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  int currentIndex = 0;
+  MainPage(this.currentIndex, {super.key});
 
   @override
   _MainPageState createState() => _MainPageState();
 }
 class _MainPageState extends State<MainPage> {
-  int currentIndex = 0;
 
   final List<Widget> _tabs = [
     NewsPage(),
-    TodoPage(),
+    const TodoPage(),
     HomePage(),
     AssignPage('SJF'),
     const Courses(),
@@ -28,7 +28,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _tabs[currentIndex],
+      body: _tabs[widget.currentIndex],
 
       bottomNavigationBar: NavigationBar(
         destinations: const [
@@ -58,10 +58,10 @@ class _MainPageState extends State<MainPage> {
           ),
         ],
 
-        selectedIndex: currentIndex,
+        selectedIndex: widget.currentIndex,
         onDestinationSelected: (index) {
           setState(() {
-            currentIndex = index;
+            widget.currentIndex = index;
           });
         },
         backgroundColor: const Color.fromARGB(230, 195, 144, 108),

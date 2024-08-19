@@ -51,14 +51,12 @@ class SocketMethods {
     return resp;
   }
   static Future<Student> getStudent() async {
-    // String command = 'getStudent*402243004';
     String command = 'getStudent*$userId';
     String resp = await initSocket(command);
     print('RESPONSE IN GET_STUDENT METHOD');
     print('THIS IS STRING RESP:::::');
     print(resp);
     return Student.fromJsonMap(jsonDecode(resp));
-    // return Student.fromJsonMap();
   }
 
 
@@ -74,7 +72,6 @@ class SocketMethods {
   }
   static List<Course> _createTheCourseList(List<dynamic> list){
     List<Course> result = [];
-    // print(list);
     for (dynamic d in list){
       result.add(Course.fromJsonMap(d));
     }
@@ -157,12 +154,22 @@ class SocketMethods {
   }
   static List<Assignment> _createAssignList(List<dynamic> list){
     List<Assignment> result = [];
-    // print(list);
     for (dynamic d in list){
       result.add(Assignment.fromJsonMap(d));
     }
     return result;
   }
+  static Future<Assignment> studentBestAssignment() async {
+    String command = 'getBestAssign*$userId';
+    String resp = await initSocket(command);
+    return Assignment.fromJsonMap(jsonDecode(resp));
+  }
+  static Future<Assignment> studentWorstAssignment() async {
+    String command = 'getWorstAssign*$userId';
+    String resp = await initSocket(command);
+    return Assignment.fromJsonMap(jsonDecode(resp));
+  }
+
 
   static Future<void> changePassword (String newPass) async {
     print("&&&&&&&PASS&&&&&&&&&");

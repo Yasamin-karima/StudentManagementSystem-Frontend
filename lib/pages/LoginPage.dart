@@ -178,7 +178,7 @@ class LoginButton extends StatelessWidget {
               case '401': LoginPage.setCheckIdPass(true, false);print(401);break;
               case '404': LoginPage.setCheckIdPass(false, false);print(404);break;
               case '200': LoginPage.setCheckIdPass(true, true);
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainPage()));
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainPage(2)));
             }
           },
           child: const Text(

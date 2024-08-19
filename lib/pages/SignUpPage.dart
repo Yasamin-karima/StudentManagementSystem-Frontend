@@ -170,7 +170,7 @@ class SignUpButton extends StatelessWidget {
             switch(res){
               case '409': SignUpPage.setCheckExists(true); print(409);break;
               case '201': SignUpPage.setCheckExists(false); print(201);
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainPage()));
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainPage(2)));
             }
           },
           child: const Text(

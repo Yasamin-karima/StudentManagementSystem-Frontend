@@ -2,22 +2,24 @@
 import 'package:flutter/material.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
+import '../NavigationBar.dart';
 import '../SocketMethods.dart';
 import '../classes/models.dart';
 
 class HomePage extends StatefulWidget{
-  Student? student;
   HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 
 }
-
 class _HomePageState extends State<HomePage> {
 
   List<Assignment> assignments = [];
   List<Todo> todos = [];
+  List<Course> coursesForExams = [];
+  Assignment? bestAssign, worstAssign;
+  String studentName = '';
 
   @override
   void initState() {
@@ -27,18 +29,19 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> fetchData() async {
     try {
-      List<Assignment> fetchedAssigns = [];
-      List<Todo> fetchedTodo = [];
-      fetchedAssigns = await SocketMethods.getUndoneAssigns('SJF');
-      fetchedTodo = await SocketMethods.getTodo();
+      List<Assignment> fetchedAssigns = await SocketMethods.getUndoneAssigns('SJF');
+      List<Todo> fetchedTodo = await SocketMethods.getTodo();
+      bestAssign = await SocketMethods.studentBestAssignment();
+      worstAssign = await SocketMethods.studentWorstAssignment();
+      studentName = (await SocketMethods.getStudent()).name.split(" ")[0];
+      var tempExams = await SocketMethods.getCourses();
 
       setState(() {
-        List<Assignment> tempAssign = [];
-        List<Todo> tempTodo = [];
         /**
          * removing passed deadline assignments
          * and getting the first 3
          */
+        List<Assignment> tempAssign = [];
         for (Assignment ass in fetchedAssigns) {
           if (int.parse((ass.getJalaliDeadline() ^ Jalali.now()).toString()) >= 0){
             tempAssign.add(ass);
@@ -53,6 +56,7 @@ class _HomePageState extends State<HomePage> {
          * removing done todos
          * and getting the first 4
          */
+        List<Todo> tempTodo = [];
         for (Todo t in fetchedTodo) {
           if (!t.isDone){
             tempTodo.add(t);
@@ -63,9 +67,18 @@ class _HomePageState extends State<HomePage> {
         } else {
           todos.addAll(tempTodo.getRange(0, 4));
         }
+        /**
+         * delete courses which exams are passed
+         */
+        for (Course c in tempExams){
+          if (int.parse((c.getJalaliDate() ^ Jalali.now()).toString()) >= 0){
+            coursesForExams.add(c);
+          }
+        }
       });
-    } catch (e) {
+    } catch (e,s) {
       print('Error fetching assigns: $e');
+      print(s);
     }
   }
 
@@ -114,7 +127,7 @@ class _HomePageState extends State<HomePage> {
               right: widthOfScreen * 0.1,
               width: widthOfScreen,
                 child: Text(
-                  'سلام، کاربر عزیز !',
+                  'سلام ${studentName} !',
                   textDirection: TextDirection.rtl,
                   style: TextStyle(
                     fontFamily: 'iransans',
@@ -178,7 +191,7 @@ class _HomePageState extends State<HomePage> {
               top: 0.565 * heightOfScreen + 138,
                 child: Container(
                   width: 0.98 * widthOfScreen,
-                  height: 0.19 * heightOfScreen,
+                  height: 0.185 * heightOfScreen,
                   decoration: const BoxDecoration(
                     color: orangeBack,
                     borderRadius: BorderRadius.only(topRight: Radius.circular(18), bottomRight: Radius.circular(18))
@@ -188,25 +201,30 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Row(
+                        textDirection: TextDirection.rtl,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          ScoreCard('معادلات دیفرانسیل', '۱۳.۲'),
-                          ScoreCard('برنامه نویسی پیشرفته', '۱۹.۷۵'),
+                          ScoreCard(bestAssign?.course!.name ?? "بهترین درس", bestAssign?.score.toString() ?? "0.0"),
+                          ScoreCard(worstAssign?.course!.name ?? "بدترین درس", worstAssign?.score.toString() ?? "0.0"),
                         ],
-                      ),
+                      ),//scores
                       SizedBox(
                         // width: 0.98 * widthOfScreen,
                         height: 0.12 * heightOfScreen,
-                        child: ListView(
+                        child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           reverse: true,
-                          children: [
+                          itemCount: coursesForExams.length,
+                          itemBuilder: (context, index) {
+                            return ExamCard(coursesForExams[index]);
+                          },
+                          /*children: [
                             ExamCard('مدار الکتریکی', '۲۳ خرداد', '۵'),
                             ExamCard('برنامه نویسی پیشرفته', '۱۱ تیر', '۱۳'),
                             ExamCard('ریاضی ۲', '۲۵ خرداد', '۷'),
-                          ],
+                          ],*/
                         ),
-                      )
+                      )//exams
                     ],
                   ),
                 ),
@@ -300,22 +318,38 @@ class AssignCard extends StatelessWidget {
 
 }
 
-class OtherButtons extends StatelessWidget {
+class OtherButtons extends StatefulWidget {
   String other = '';
   OtherButtons(this.other, {super.key});
 
+  @override
+  State<OtherButtons> createState() => _OtherButtonsState();
+}
 
+class _OtherButtonsState extends State<OtherButtons> {
   @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
-        null;
+        int index = 0;
+        switch (widget.other) {
+          case "تمرینا" :
+            index = 3;
+            break;
+          case "کارا" :
+            index = 1;
+            break;
+          case "درسا" :
+            index = 4;
+            break;
+        }
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainPage(index)));
       },
       child: Row(
         children :[
           const Icon(Icons.chevron_left, size: 35, color: Colors.black,),
           Text(
-            'بقیه $other',
+            'بقیه ${widget.other}',
             style: const TextStyle(
               fontFamily: 'iransans',
               fontSize: 14,
@@ -326,7 +360,6 @@ class OtherButtons extends StatelessWidget {
       ]),
     );
   }
-
 }
 
 class TodoParts extends StatefulWidget {
@@ -378,8 +411,8 @@ class _TodoPartsState extends State<TodoParts> {
 }
 
 class ExamCard extends StatelessWidget {
-  String course, examDate, remaining;
-  ExamCard(this.course, this.examDate, this.remaining, {super.key});
+  Course course;
+  ExamCard(this.course, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -397,13 +430,13 @@ class ExamCard extends StatelessWidget {
         ),
         child: Card(
           borderOnForeground: true,
-          margin: EdgeInsets.all(0),
+          margin: const EdgeInsets.all(0),
           color: const Color.fromARGB(220, 78, 128, 152),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                'امتحان $course',
+                'امتحان ${course.name}',
                 textDirection: TextDirection.rtl,
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontFamily: 'iransans',
@@ -412,14 +445,15 @@ class ExamCard extends StatelessWidget {
                 ),
               ),
               Text(
-                examDate,
+                '${course.getJalaliDate().formatter.d} ${course.getJalaliDate().formatter.mN}',
                 textDirection: TextDirection.rtl,
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontFamily: 'iransans',
-                  fontSize: 12,
+                  fontSize: 13,
                   fontWeight: FontWeight.w400,
                 ),),
-              Text( '$remaining روز مانده',
+              Text(
+                '‏${(Jalali.now() ^ course.getJalaliDate()).abs()} روز مانده',
                 textDirection: TextDirection.rtl,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontFamily: 'iransans',
@@ -461,7 +495,7 @@ class ScoreCard extends StatelessWidget {
           child: Row(
             textDirection: TextDirection.rtl,
             children: [
-              SizedBox(width: 0.013 * widthOfScreen),
+              SizedBox(width: 0.02 * widthOfScreen),
               Text(
                 score,
                 textWidthBasis: TextWidthBasis.parent,
@@ -478,8 +512,8 @@ class ScoreCard extends StatelessWidget {
                   textDirection: TextDirection.rtl,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontFamily: 'iransans',
-                    fontSize: 12,
-                    fontWeight: FontWeight.normal,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ),
