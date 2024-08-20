@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
@@ -6,15 +5,14 @@ import '../NavigationBar.dart';
 import '../SocketMethods.dart';
 import '../classes/models.dart';
 
-class HomePage extends StatefulWidget{
+class HomePage extends StatefulWidget {
   HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
-
 }
-class _HomePageState extends State<HomePage> {
 
+class _HomePageState extends State<HomePage> {
   List<Assignment> assignments = [];
   List<Todo> todos = [];
   List<Course> coursesForExams = [];
@@ -43,7 +41,7 @@ class _HomePageState extends State<HomePage> {
          */
         List<Assignment> tempAssign = [];
         for (Assignment ass in fetchedAssigns) {
-          if (int.parse((ass.getJalaliDeadline() ^ Jalali.now()).toString()) >= 0){
+          if (int.parse((ass.getJalaliDeadline() ^ Jalali.now()).toString()) >= 0) {
             tempAssign.add(ass);
           }
         }
@@ -58,7 +56,7 @@ class _HomePageState extends State<HomePage> {
          */
         List<Todo> tempTodo = [];
         for (Todo t in fetchedTodo) {
-          if (!t.isDone){
+          if (!t.isDone) {
             tempTodo.add(t);
           }
         }
@@ -70,23 +68,20 @@ class _HomePageState extends State<HomePage> {
         /**
          * delete courses which exams are passed
          */
-        for (Course c in tempExams){
-          if (int.parse((c.getJalaliDate() ^ Jalali.now()).toString()) >= 0){
+        for (Course c in tempExams) {
+          if (int.parse((c.getJalaliDate() ^ Jalali.now()).toString()) >= 0) {
             coursesForExams.add(c);
           }
         }
       });
-    } catch (e,s) {
+    } catch (e, s) {
       print('Error fetching assigns: $e');
       print(s);
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
     const orangeBack = Color.fromARGB(255, 195, 144, 108);
 
     double widthOfScreen = MediaQuery.of(context).size.width;
@@ -96,13 +91,10 @@ class _HomePageState extends State<HomePage> {
       colors: <Color>[
         Color.fromARGB(255, 39, 64, 76),
         Color.fromARGB(255, 70, 115, 136),
-        Color.fromARGB(255, 78, 128, 152)],
-    ).createShader(Rect.fromLTWH(
-        widthOfScreen*0.5,
-        widthOfScreen*0.75 ,
-        widthOfScreen*0.85,
-        widthOfScreen*0.95));
-
+        Color.fromARGB(255, 78, 128, 152)
+      ],
+    ).createShader(
+        Rect.fromLTWH(widthOfScreen * 0.5, widthOfScreen * 0.75, widthOfScreen * 0.85, widthOfScreen * 0.95));
 
     return Scaffold(
       body: Container(
@@ -116,9 +108,7 @@ class _HomePageState extends State<HomePage> {
               ],
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
-              stops: const [0.27, 0.5, 0.75, 0.97]
-
-          ),
+              stops: const [0.27, 0.5, 0.75, 0.97]),
         ),
         child: Stack(
           children: [
@@ -126,108 +116,108 @@ class _HomePageState extends State<HomePage> {
               top: heightOfScreen * 0.08,
               right: widthOfScreen * 0.1,
               width: widthOfScreen,
-                child: Text(
-                  'سلام ${studentName} !',
-                  textDirection: TextDirection.rtl,
-                  style: TextStyle(
+              child: Text(
+                'سلام ${studentName} !',
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
                     fontFamily: 'iransans',
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                     foreground: Paint()..shader = linearGradient),
-                  ),
-                ), // text"hello"
+              ),
+            ), // text"hello"
             Positioned(
-              top: heightOfScreen * 0.125,
-              left: widthOfScreen * 0.005,
-                child: OtherButtons('تمرینا')
-            ),// text"other assigns"
+                top: heightOfScreen * 0.125,
+                left: widthOfScreen * 0.005,
+                child: OtherButtons('تمرینا')), // text"other assigns"
             Positioned(
-              top: 0.125 * heightOfScreen + 44,
-              left: 0.02 * widthOfScreen,
+                top: 0.125 * heightOfScreen + 44,
+                left: 0.02 * widthOfScreen,
                 child: Container(
-                  width: 0.96 * widthOfScreen,
-                  height: 0.21 * heightOfScreen,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
-                    color: orangeBack,
-                  ),
-                  child: ListView.builder(
-                    reverse: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: assignments.length,
-                    itemBuilder: (context, index) {
-                      return AssignCard(assignments[index]);
-                    },
-                  ),
-                )
-            ),//assign cards
+                    width: 0.96 * widthOfScreen,
+                    height: 0.21 * heightOfScreen,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                      color: orangeBack,
+                    ),
+                    child: (assignments.isNotEmpty)
+                        ? ListView.builder(
+                            reverse: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: assignments.length,
+                            itemBuilder: (context, index) {
+                              return AssignCard(assignments[index]);
+                            },
+                          )
+                        : const Center(
+                            child: Text(
+                            'شما تمرینی ندارید',
+                            style: TextStyle(fontSize: 18, fontFamily: 'iransans'),
+                          )))), //assign cards
             Positioned(
-              top: heightOfScreen * 0.335 + 44,
-              left: widthOfScreen * 0.005,
-              child: OtherButtons('کارا')
-            ),//text"other TODOs"
+                top: heightOfScreen * 0.335 + 44,
+                left: widthOfScreen * 0.005,
+                child: OtherButtons('کارا')), //text"other TODOs"
             Positioned(
-              top: heightOfScreen * 0.335 + 90,
-              left: 0,
-                child: SizedBox(
-                  height: 0.23 * heightOfScreen,
-                  width: 0.98 * widthOfScreen,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(0),
-                    scrollDirection: Axis.vertical,
-                    itemCount: todos.length,
-                    itemBuilder: (context, index) {
-                      return TodoParts(todos[index]);
-                    },
-                  )
-                )
-            ),//todos
-            Positioned(
-                top: heightOfScreen * 0.565 + 90,
+                top: heightOfScreen * 0.335 + 90,
                 left: 0,
-                child: OtherButtons('درسا')
-            ),// text"other courses"
+                child: SizedBox(
+                    height: 0.23 * heightOfScreen,
+                    width: 0.98 * widthOfScreen,
+                    child: (todos.isNotEmpty)
+                        ? ListView.builder(
+                            padding: const EdgeInsets.all(0),
+                            scrollDirection: Axis.vertical,
+                            itemCount: todos.length,
+                            itemBuilder: (context, index) {
+                              return TodoParts(todos[index]);
+                            },
+                          )
+                        : const Center(
+                            child: Text(
+                            'شما هنوز کاری ندارید',
+                            style: TextStyle(fontSize: 18, fontFamily: 'iransans'),
+                          )))), //todos
+            Positioned(top: heightOfScreen * 0.565 + 90, left: 0, child: OtherButtons('درسا')), // text"other courses"
             Positioned(
               top: 0.565 * heightOfScreen + 138,
-                child: Container(
-                  width: 0.98 * widthOfScreen,
-                  height: 0.185 * heightOfScreen,
-                  decoration: const BoxDecoration(
+              child: Container(
+                width: 0.98 * widthOfScreen,
+                height: 0.185 * heightOfScreen,
+                decoration: const BoxDecoration(
                     color: orangeBack,
-                    borderRadius: BorderRadius.only(topRight: Radius.circular(18), bottomRight: Radius.circular(18))
-                  ),
-
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Row(
-                        textDirection: TextDirection.rtl,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ScoreCard(bestAssign?.course!.name ?? "بهترین درس", bestAssign?.score.toString() ?? "0.0"),
-                          ScoreCard(worstAssign?.course!.name ?? "بدترین درس", worstAssign?.score.toString() ?? "0.0"),
-                        ],
-                      ),//scores
-                      SizedBox(
-                        // width: 0.98 * widthOfScreen,
-                        height: 0.12 * heightOfScreen,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          reverse: true,
-                          itemCount: coursesForExams.length,
-                          itemBuilder: (context, index) {
-                            return ExamCard(coursesForExams[index]);
-                          },
-                          /*children: [
-                            ExamCard('مدار الکتریکی', '۲۳ خرداد', '۵'),
-                            ExamCard('برنامه نویسی پیشرفته', '۱۱ تیر', '۱۳'),
-                            ExamCard('ریاضی ۲', '۲۵ خرداد', '۷'),
-                          ],*/
-                        ),
-                      )//exams
-                    ],
-                  ),
+                    borderRadius: BorderRadius.only(topRight: Radius.circular(18), bottomRight: Radius.circular(18))),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      textDirection: TextDirection.rtl,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ScoreCard(bestAssign?.course!.name ?? "بهترین درس", bestAssign?.score.toString() ?? "0.0"),
+                        ScoreCard(worstAssign?.course!.name ?? "بدترین درس", worstAssign?.score.toString() ?? "0.0"),
+                      ],
+                    ), //scores
+                    SizedBox(
+                      // width: 0.98 * widthOfScreen,
+                      height: 0.12 * heightOfScreen,
+                      child: (coursesForExams.isNotEmpty)
+                          ? ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              reverse: true,
+                              itemCount: coursesForExams.length,
+                              itemBuilder: (context, index) {
+                                return ExamCard(coursesForExams[index]);
+                              })
+                          : const Center(
+                              child: Text(
+                              'شما هنوز درسی ندارید',
+                              style: TextStyle(fontSize: 18, fontFamily: 'iransans'),
+                            )),
+                    ) //exams
+                  ],
                 ),
+              ),
             ),
           ],
         ),
@@ -242,7 +232,6 @@ class AssignCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     double widthOfScreen = MediaQuery.of(context).size.width;
     double heightOfScreen = MediaQuery.of(context).size.height;
 
@@ -250,10 +239,7 @@ class AssignCard extends StatelessWidget {
       child: Container(
         width: 0.3 * widthOfScreen,
         height: 0.195 * heightOfScreen,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(13)
-        ),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(13)),
         child: Card(
           borderOnForeground: true,
           margin: const EdgeInsets.all(0),
@@ -266,7 +252,8 @@ class AssignCard extends StatelessWidget {
                 assignment.title,
                 textDirection: TextDirection.rtl,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontFamily: 'iransans',
+                style: const TextStyle(
+                  fontFamily: 'iransans',
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
                 ),
@@ -274,10 +261,11 @@ class AssignCard extends StatelessWidget {
               Column(
                 children: [
                   const Text(
-                    'مهلت:'
-                    ,textDirection: TextDirection.rtl,
+                    'مهلت:',
+                    textDirection: TextDirection.rtl,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'iransans',
+                    style: TextStyle(
+                      fontFamily: 'iransans',
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
                     ),
@@ -286,36 +274,40 @@ class AssignCard extends StatelessWidget {
                     assignment.getJalaliDeadline().formatter.wN,
                     textDirection: TextDirection.rtl,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontFamily: 'iransans',
+                    style: const TextStyle(
+                      fontFamily: 'iransans',
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
-                    ),),
+                    ),
+                  ),
                   Text(
                     '${assignment.getJalaliDeadline().formatter.d} ${assignment.getJalaliDeadline().formatter.mN}',
                     textDirection: TextDirection.rtl,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontFamily: 'iransans',
+                    style: const TextStyle(
+                      fontFamily: 'iransans',
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
-                    ),),
+                    ),
+                  ),
                 ],
               ),
-              Text (
+              Text(
                 '‏${(Jalali.now() ^ assignment.getJalaliDeadline()).abs()} روز مانده',
                 textDirection: TextDirection.rtl,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontFamily: 'iransans',
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.deepOrange.shade900
-                ),),
+                style: TextStyle(
+                    fontFamily: 'iransans',
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepOrange.shade900),
+              ),
             ],
           ),
         ),
       ),
     );
   }
-
 }
 
 class OtherButtons extends StatefulWidget {
@@ -333,30 +325,29 @@ class _OtherButtonsState extends State<OtherButtons> {
       onPressed: () {
         int index = 0;
         switch (widget.other) {
-          case "تمرینا" :
+          case "تمرینا":
             index = 3;
             break;
-          case "کارا" :
+          case "کارا":
             index = 1;
             break;
-          case "درسا" :
+          case "درسا":
             index = 4;
             break;
         }
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainPage(index)));
       },
-      child: Row(
-        children :[
-          const Icon(Icons.chevron_left, size: 35, color: Colors.black,),
-          Text(
-            'بقیه ${widget.other}',
-            style: const TextStyle(
-              fontFamily: 'iransans',
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.black
-            ),
-          )
+      child: Row(children: [
+        const Icon(
+          Icons.chevron_left,
+          size: 35,
+          color: Colors.black,
+        ),
+        Text(
+          'بقیه ${widget.other}',
+          style:
+              const TextStyle(fontFamily: 'iransans', fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
+        )
       ]),
     );
   }
@@ -370,10 +361,10 @@ class TodoParts extends StatefulWidget {
   @override
   State<TodoParts> createState() => _TodoPartsState();
 }
+
 class _TodoPartsState extends State<TodoParts> {
   @override
   Widget build(BuildContext context) {
-
     double widthOfScreen = MediaQuery.of(context).size.width;
     double heightOfScreen = MediaQuery.of(context).size.height;
     bool s = false;
@@ -400,10 +391,7 @@ class _TodoPartsState extends State<TodoParts> {
               });
             },
           ),
-          Text(
-              widget.todo.title,
-            style: const TextStyle(fontFamily: 'iransans')
-            )
+          Text(widget.todo.title, style: const TextStyle(fontFamily: 'iransans'))
         ],
       ),
     );
@@ -416,7 +404,6 @@ class ExamCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     double widthOfScreen = MediaQuery.of(context).size.width;
     double heightOfScreen = MediaQuery.of(context).size.height;
 
@@ -424,10 +411,7 @@ class ExamCard extends StatelessWidget {
       child: Container(
         width: 0.38 * widthOfScreen,
         height: 0.12 * heightOfScreen,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(13)
-        ),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(13)),
         child: Card(
           borderOnForeground: true,
           margin: const EdgeInsets.all(0),
@@ -439,7 +423,8 @@ class ExamCard extends StatelessWidget {
                 'امتحان ${course.name}',
                 textDirection: TextDirection.rtl,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontFamily: 'iransans',
+                style: const TextStyle(
+                  fontFamily: 'iransans',
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
@@ -448,35 +433,36 @@ class ExamCard extends StatelessWidget {
                 '${course.getJalaliDate().formatter.d} ${course.getJalaliDate().formatter.mN}',
                 textDirection: TextDirection.rtl,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontFamily: 'iransans',
+                style: const TextStyle(
+                  fontFamily: 'iransans',
                   fontSize: 13,
                   fontWeight: FontWeight.w400,
-                ),),
+                ),
+              ),
               Text(
                 '‏${(Jalali.now() ^ course.getJalaliDate()).abs()} روز مانده',
                 textDirection: TextDirection.rtl,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontFamily: 'iransans',
+                style: TextStyle(
+                    fontFamily: 'iransans',
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Colors.deepOrange.shade900
-                ),),
+                    color: Colors.deepOrange.shade900),
+              ),
             ],
           ),
         ),
       ),
     );
   }
-
 }
 
 class ScoreCard extends StatelessWidget {
   String course, score;
-  ScoreCard(this.course, this.score ,{super.key});
+  ScoreCard(this.course, this.score, {super.key});
 
   @override
   Widget build(BuildContext context) {
-
     double widthOfScreen = MediaQuery.of(context).size.width;
     double heightOfScreen = MediaQuery.of(context).size.height;
 
@@ -485,8 +471,8 @@ class ScoreCard extends StatelessWidget {
         width: 0.38 * widthOfScreen,
         height: 0.05 * heightOfScreen,
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(13),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(13),
         ),
         child: Card(
           borderOnForeground: true,
@@ -501,7 +487,8 @@ class ScoreCard extends StatelessWidget {
                 textWidthBasis: TextWidthBasis.parent,
                 textDirection: TextDirection.rtl,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontFamily: 'iransans',
+                style: const TextStyle(
+                  fontFamily: 'iransans',
                   fontSize: 15,
                   fontWeight: FontWeight.normal,
                 ),
@@ -511,7 +498,8 @@ class ScoreCard extends StatelessWidget {
                   course,
                   textDirection: TextDirection.rtl,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontFamily: 'iransans',
+                  style: const TextStyle(
+                    fontFamily: 'iransans',
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                   ),
@@ -519,9 +507,8 @@ class ScoreCard extends StatelessWidget {
               ),
             ],
           ),
+        ),
       ),
-    ),
     );
   }
-
 }

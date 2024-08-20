@@ -187,7 +187,6 @@ class DeleteAccountButton extends StatelessWidget {
         decoration: BoxDecoration(color: darkBlue, borderRadius: BorderRadius.circular(20)),
         child: InkWell(
           onDoubleTap: () {
-            print("jhgdfd");
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
@@ -196,7 +195,7 @@ class DeleteAccountButton extends StatelessWidget {
                   TextButton(
                       onPressed: () {
                         SocketMethods.deleteAccount();
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage(),));
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage(),));
                       }, 
                       child: const Text('بله،‌ مطمئنم')
                   ),

@@ -99,11 +99,9 @@ class SocketMethods {
   }
   static List<Todo> _createTodoList(List<dynamic> list){
     List<Todo> result = [];
-    // print(list);
     for (dynamic d in list){
       result.add(Todo.fromJsonMap(d));
     }
-    // print(result);
     return result;
   }
   static Future<void> setTodoState(String title, bool newValue) async {
@@ -159,15 +157,23 @@ class SocketMethods {
     }
     return result;
   }
-  static Future<Assignment> studentBestAssignment() async {
+  static Future<Assignment?> studentBestAssignment() async {
     String command = 'getBestAssign*$userId';
     String resp = await initSocket(command);
-    return Assignment.fromJsonMap(jsonDecode(resp));
+    if (jsonDecode(resp) == null) {
+      return null;
+    } else {
+      return Assignment.fromJsonMap(jsonDecode(resp));
+    }
   }
-  static Future<Assignment> studentWorstAssignment() async {
+  static Future<Assignment?> studentWorstAssignment() async {
     String command = 'getWorstAssign*$userId';
     String resp = await initSocket(command);
-    return Assignment.fromJsonMap(jsonDecode(resp));
+    if (jsonDecode(resp) == null) {
+      return null;
+    } else {
+      return Assignment.fromJsonMap(jsonDecode(resp));
+    }
   }
 
 
