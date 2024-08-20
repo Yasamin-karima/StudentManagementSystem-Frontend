@@ -15,6 +15,7 @@ class AssignPage extends StatefulWidget{
 class _AssignPageState extends State<AssignPage> {
 
   List<Assignment> doneAssigns = [];
+  List<Assignment> passedUndoneAssigns = [];
   List<Assignment> undoneAssigns = [];
 
   @override
@@ -37,7 +38,13 @@ class _AssignPageState extends State<AssignPage> {
 
       setState(() {
         doneAssigns = done;
-        undoneAssigns = undone;
+        for (Assignment ass in undone){
+          if (getDistanceBetween(ass) >= 0) {
+            undoneAssigns.add(ass);
+          } else {
+            passedUndoneAssigns.add(ass);
+          }
+        }
       });
     } catch (e, s) {
       print('Error fetching assigns: $e');
@@ -74,7 +81,6 @@ class _AssignPageState extends State<AssignPage> {
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
                 stops: const [0.27, 0.5, 0.75, 0.97]),
-            // color: lightBlueBackground,
           ),
           child: Stack(
             children: [
@@ -138,69 +144,76 @@ class _AssignPageState extends State<AssignPage> {
                   )
               ), //sort options
               Positioned(
-                  top: 0.17 * heightOfScreen,
+                  top: 0.16 * heightOfScreen,
                   child: SizedBox(
-                    width: widthOfScreen, height: 0.8 * heightOfScreen,
-                    child: Column(
+                    width: widthOfScreen, height: 0.76 * heightOfScreen,
+                    child: Flex(
+                      direction: Axis.vertical,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        const Row(
-                          textDirection: TextDirection.rtl,
-                          children: [
-                            SizedBox(width: 20,),
-                            Text(
-                                'انجام نشده:',
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(
-                                  fontFamily: 'iransans',
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                )
-                            ),
-                          ],
+                        const Text(
+                            '   انجام نشده:',
+                            textDirection: TextDirection.rtl,
+                            style: TextStyle(
+                              fontFamily: 'iransans',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            )
                         ),
-                        SizedBox(
-                          height: 0.42 * heightOfScreen,
+                        Flexible(
                           child: GridView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: undoneAssigns.length,
                             reverse: true,
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
                             itemBuilder: (context, index) {
                               return AssignCard(undoneAssigns[index]);
                             },
                           ),
                         ),
-                        SizedBox(height: 0.0164 * heightOfScreen,),
-                        const Row(
-                          textDirection: TextDirection.rtl,
-                          children: [
-                            SizedBox(width: 20,),
-                            Text(
-                                'ارسال شده:',
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(
-                                  fontFamily: 'iransans',
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                )
-                            ),
-                          ],
+                        const Text(
+                            '   ارسال شده:',
+                            textDirection: TextDirection.rtl,
+                            style: TextStyle(
+                              fontFamily: 'iransans',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            )
                         ),
-                        SizedBox(
-                          height: 0.21 * heightOfScreen,
+                        Flexible(
                           child: GridView.builder(
+                            scrollDirection: Axis.horizontal,
                             itemCount: doneAssigns.length,
                             reverse: true,
-                            scrollDirection: Axis.horizontal,
                             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
                             itemBuilder: (context, index) {
                               return AssignCard(doneAssigns[index]);
                             },
                           ),
-                        )
+                        ),
+                        const Text(
+                            '   ددلاین گذشته:',
+                            textDirection: TextDirection.rtl,
+                            style: TextStyle(
+                              fontFamily: 'iransans',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            )
+                        ),
+                        Flexible(
+                          child: GridView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: passedUndoneAssigns.length,
+                            reverse: true,
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
+                            itemBuilder: (context, index) {
+                              return AssignCard(passedUndoneAssigns[index]);
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   )
@@ -216,7 +229,6 @@ class _AssignPageState extends State<AssignPage> {
 
 class AssignCard extends StatefulWidget {
   final Assignment assignment;
-  // final Function () onAssCardTap;
   const AssignCard(this.assignment, {super.key});
 
   @override
@@ -226,9 +238,6 @@ class _AssignCardState extends State<AssignCard> {
   @override
   Widget build(BuildContext context) {
 
-    double widthOfScreen = MediaQuery.of(context).size.width;
-    double heightOfScreen = MediaQuery.of(context).size.height;
-
     return InkWell(
       onTap: () {
         _showModalBottomSheet(context, widget.assignment);
@@ -237,7 +246,7 @@ class _AssignCardState extends State<AssignCard> {
       child: Card(
         margin: const EdgeInsets.all(10),
         borderOnForeground: true,
-        color: (int.parse(getDistanceBetween(widget.assignment)) > 0) ?  const Color.fromARGB(180, 78, 128, 152) :  const Color.fromARGB(255, 250, 100, 100),
+        color: (getDistanceBetween(widget.assignment) > 0) ?  const Color.fromARGB(180, 78, 128, 152) :  const Color.fromARGB(230, 230, 110, 100),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -276,9 +285,9 @@ class _AssignCardState extends State<AssignCard> {
               textDirection: TextDirection.rtl,
               children: [
                 const SizedBox(width: 10),
-                Text(int.parse(getDistanceBetween(widget.assignment)) > 0
+                Text(getDistanceBetween(widget.assignment) > 0
                     ?'‏${getDistanceBetween(widget.assignment)} روز مانده'
-                    :'‏${-int.parse(getDistanceBetween(widget.assignment))} روز گذشته',
+                    :'‏${-getDistanceBetween(widget.assignment)} روز گذشته',
                   textDirection: TextDirection.rtl,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontFamily: 'iransans',
@@ -388,9 +397,9 @@ void _showModalBottomSheet(BuildContext context, Assignment ass){
                                   child: Column(
                                     children: [
                                       Text(format1(ass.getJalaliDeadline()), style: _textStyle(16, FontWeight.w500)),
-                                      Text(int.parse(getDistanceBetween(ass)) > 0
+                                      Text(getDistanceBetween(ass) > 0
                                           ?'‏${getDistanceBetween(ass)} روز مانده'
-                                          :'‏${-int.parse(getDistanceBetween(ass))} روز گذشته',
+                                          :'‏${(-getDistanceBetween(ass))} روز گذشته',
                                           style: _textStyle(16, FontWeight.w500)),
                                     ],
                                   ),
@@ -416,10 +425,6 @@ void _showModalBottomSheet(BuildContext context, Assignment ass){
                                       FilePickerResult? result = await FilePicker.platform.pickFiles();
                                       if (result == null) return;
                                       PlatformFile file = result.files.first;
-                                      // openFile(file);
-                                      /*void openFile(PlatformFile file) {
-  OpenFile.open(file.path!);
-}*/
                                     },
                                   ),
                                 )
@@ -458,8 +463,8 @@ void _showModalBottomSheet(BuildContext context, Assignment ass){
   );
 }
 
-String getDistanceBetween(Assignment ass) {
-  return (ass.getJalaliDeadline() ^ Jalali.now()).toString();
+int getDistanceBetween(Assignment ass) {
+  return ass.getJalaliDeadline() ^ Jalali.now();
 }
 
 TextStyle _textStyle(double size, FontWeight w){
