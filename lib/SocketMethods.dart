@@ -191,6 +191,12 @@ class SocketMethods {
     print('RESPONSE IN STUDENT_deleteAccount METHOD');
     print(resp);
   }
+  // logout method is used to clear the previous user logged in
+  void logout() {
+    setUserId('');
+    setPassword('');
+    setName('');
+  }
 
   void setUserId(String value){
     userId = value;
@@ -204,6 +210,8 @@ class SocketMethods {
     _name = value;
     print('@@@@@@@@@@@@@@@@@@ NAME' + _name + '@@@@@@@@@@@@@@@@@@');
   }
+
+
 
 
 }

@@ -298,7 +298,8 @@ class LogoutButton extends StatelessWidget {
                 actions: [
                   TextButton(
                       onPressed: () {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage(),));
+                        SocketMethods().logout();
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage()));
                       },
                       child: const Text('بله')
                   ),
