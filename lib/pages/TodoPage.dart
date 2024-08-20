@@ -11,7 +11,6 @@ class TodoPage extends StatefulWidget {
   @override
   State<TodoPage> createState() => _TodoPageState();
 }
-
 class _TodoPageState extends State<TodoPage>    {
   List<Todo>? _todosList;
   List<Todo>? doneData = [];
@@ -20,7 +19,7 @@ class _TodoPageState extends State<TodoPage>    {
   @override
   void initState() {
     super.initState();
-    fetchData(); // Call your method here
+    fetchData();
   }
 
   Future<void> fetchData() async {
@@ -81,8 +80,8 @@ class _TodoPageState extends State<TodoPage>    {
               ),
             ),//above text
             Positioned(
-              top: 0.13 * heightOfScreen,
-              bottom: 80,
+              top: 0.14 * heightOfScreen,
+              height: 0.43 * heightOfScreen,
               child: SizedBox(
                 height: 0.3 * heightOfScreen,
                 width: widthOfScreen,
@@ -102,7 +101,8 @@ class _TodoPageState extends State<TodoPage>    {
               ),
             ),//undone todos
             Positioned(
-              top: 0.56 * heightOfScreen,
+              top: 0.58 * heightOfScreen,
+              height: 0.33 * heightOfScreen,
               child: SizedBox(
                 height: 0.3 * heightOfScreen,
                 width: widthOfScreen,
