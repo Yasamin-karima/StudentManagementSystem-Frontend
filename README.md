@@ -1,16 +1,18 @@
-# project_front_end
+# Student Management System (android application)
 
-A new Flutter project.
+**An almost comprehensive backend solution for managing schools and educational centers.**
 
-## Getting Started
+This Student Management System is The frontend part of the project, written in Dart and Flutter framework.<br/>
+In this android application a student can:
+1. manage courses
+2. check submit assignments
+3. check grades
+4. set todos
+5. check news
 
-This project is a starting point for a Flutter application.
+**Please note:** This is only the frontend component of the project. There's a separate repository containing backend and server-side files which u need to download and setup to use the features of this android app.
 
-A few resources to get you started if this is your first Flutter project:
+## Application 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+https://github.com/user-attachments/assets/0aec40f6-dca7-4694-8994-f9190e79da78
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
